@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koko | The Everything Recipe App</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Warm, inviting color palette */
+            --bg-color: #FBF8F1; /* Soft cream/off-white */
+            --text-color: #2C3626; /* Deep organic green/brown */
+            --accent-color: #E27B58; /* Terracotta / Warm sunset orange */
+            --accent-light: #F4E2D8;
+            --highlight-green: #89A873; 
+            --white: #FFFFFF;
+            
+            --border-radius-lg: 32px;
+            --border-radius-md: 20px;
+            
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.1;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(251, 248, 241, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-color);
+            letter-spacing: -1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(226, 123, 88, 0.2);
+            background-color: #d16a48;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 5% 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            margin-bottom: 24px;
+            letter-spacing: -2px;
+            max-width: 900px;
+            color: var(--text-color);
+        }
+
+        .hero h1 span {
+            color: var(--accent-color);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            max-width: 700px;
+            margin-bottom: 48px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .badges {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 64px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .app-badge {
+            background: var(--text-color);
+            color: var(--white);
+            padding: 12px 32px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .app-badge i {
+            font-size: 24px;
+        }
+
+        .app-badge:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(44, 54, 38, 0.2);
+        }
+
+        .hero-images {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 40px;
+            width: 100%;
+            perspective: 1000px;
+        }
+
+        .screenshot {
+            width: 250px;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+            transform-style: preserve-3d;
+            transition: var(--transition);
+            /* Add a subtle border to make it pop like a device */
+            border: 8px solid var(--white);
+            background: var(--white);
+            overflow: hidden;
+            display: flex;
+            object-fit: cover;
+        }
+        
+        .screenshot img {
+             width: 100%;
+             height: auto;
+             border-radius: 32px;
+             display: block;
+        }
+
+        .screenshot:nth-child(1) {
+            transform: rotateY(15deg) rotateX(5deg) translateY(20px);
+        }
+        .screenshot:nth-child(2) {
+            transform: translateZ(50px) translateY(-10px);
+            z-index: 2;
+            width: 280px;
+        }
+        .screenshot:nth-child(3) {
+            transform: rotateY(-15deg) rotateX(5deg) translateY(20px);
+        }
+
+        .hero-images:hover .screenshot {
+            transform: translateZ(0) rotateY(0) rotateX(0) translateY(0);
+        }
+
+        /* Feature Sections */
+        .features {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            margin-bottom: 120px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .feature-row.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-row.reverse {
+            grid-auto-flow: dense;
+            direction: rtl;
+        }
+        
+        .feature-row.reverse > * {
+            direction: ltr;
+        }
+
+        .feature-text h2 {
+            font-size: 3rem;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .feature-text p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .feature-text ul {
+            list-style: none;
+            margin-top: 32px;
+        }
+
+        .feature-text ul li {
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-text ul li i {
+            color: var(--accent-color);
+            background: var(--accent-light);
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        .feature-image-container {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+            /* Soft gradient background */
+            background: linear-gradient(135deg, #FFF, #F9EBE5);
+        }
+
+        .feature-image-container img {
+            width: 260px;
+            border-radius: 36px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border: 6px solid var(--white);
+            transition: var(--transition);
+        }
+
+        .feature-image-container:hover img {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        /* Pricing Focus Section */
+        .pricing-section {
+            background: var(--text-color);
+            color: var(--white);
+            padding: 100px 5%;
+            text-align: center;
+            border-radius: 40px;
+            margin: 0 24px 100px;
+        }
+
+        .pricing-section h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--highlight-green);
+        }
+
+        .pricing-section p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .pricing-cards {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            width: 320px;
+            text-align: left;
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .pricing-card .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--accent-light);
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .pricing-card ul li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        .pricing-card ul li i {
+            color: var(--highlight-green);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 5% 40px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-col p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .footer-col a {
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.8;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .footer-col a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(251, 248, 241, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            border-radius: var(--border-radius-md);
+            padding: 40px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+            position: relative;
+            transform: translateY(50px);
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+            background: var(--bg-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent-color);
+        }
+
+        .modal-content h2 {
+            font-size: 2rem;
+            margin-bottom: 24px;
+            color: var(--accent-color);
+        }
+
+        .modal-content p, .modal-content li {
+            margin-bottom: 16px;
+            opacity: 0.8;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-images { flex-direction: column; align-items: center; perspective: none; }
+            .screenshot { transform: none; width: 220px; z-index: 1;}
+            .screenshot:nth-child(n) { transform: none;}
+            
+            .feature-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .feature-row.reverse { direction: ltr; }
+            .feature-text ul li { justify-content: center; text-align: left; }
+            .feature-image-container img { width: 220px; }
+            
+            .pricing-section { padding: 60px 5%; margin: 0 16px 60px; border-radius: 24px; }
+            .pricing-section h2 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Koko.</div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#about">About</a>
+        </div>
+        <button class="btn">Get the App</button>
+    </nav>
+
+    <section class="hero">
+        <h1>Bring all your recipes <span>together.</span></h1>
+        <p>Your beautiful, centralized cookbook. Import PDF cookbooks, save links from social media, and discover a joy-filled, interactive cooking experience.</p>
+        
+        <div class="badges">
+            <a class="app-badge">
+                <i class="fab fa-apple"></i>
+                <div>
+                    <div style="font-size: 10px; opacity: 0.8">Download on the</div>
+                    <div style="font-weight: 600;">App Store</div>
+                </div>
+            </a>
+            <a class="app-badge">
+                <i class="fab fa-google-play"></i>
+                <div>
+                    <div style="font-size: 10px; opacity: 0.8">GET IT ON</div>
+                    <div style="font-weight: 600;">Google Play</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="hero-images">
+            <!-- Utilizing printscreens placeholders based on standard app resolutions -->
+            <div class="screenshot"><img src="images/home.png" alt="Koko Home Screen" onerror="this.src='https://placehold.co/800x1600/F4E2D8/E27B58?text=Home\nRecipes'"></div>
+            <div class="screenshot"><img src="images/recipe.png" alt="Koko Recipe Screen" onerror="this.src='https://placehold.co/800x1600/E27B58/FFF?text=Soup\nRecipe'"></div>
+            <div class="screenshot"><img src="images/mealplan.png" alt="Koko Meal Plan Screen" onerror="this.src='https://placehold.co/800x1600/89A873/FFF?text=Meal\nPlan'"></div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-row">
+            <div class="feature-text">
+                <h2>Finally, all your PDF cookbooks in one place.</h2>
+                <p>No more searching through disorganized folders. Koko allows you to import any PDF cookbook, parse recipes beautifully, and store them securely.</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Automatically extracts ingredients & instructions</li>
+                    <li><i class="fas fa-check"></i> Keeps the original layout accessible</li>
+                    <li><i class="fas fa-check"></i> Organized by collections and tags</li>
+                </ul>
+            </div>
+            <div class="feature-image-container">
+                <img src="images/home.png" alt="Cookbook Integration UI" onerror="this.src='https://placehold.co/800x1600/F4E2D8/E27B58?text=Your\nRecipes'">
+            </div>
+        </div>
+
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <h2>Save from anywhere. Literally.</h2>
+                <p>Found a recipe on Instagram, TikTok, or a blog? Drop a link, a screenshot, or plain text. Koko's smart engine turns it into a structured, cookable recipe instantly.</p>
+                <ul>
+                    <li><i class="fas fa-link"></i> Paste URLs from social media</li>
+                    <li><i class="fas fa-camera"></i> Scan physical cookbook pages</li>
+                    <li><i class="fas fa-robot"></i> AI-powered nutrition extraction</li>
+                </ul>
+            </div>
+            <div class="feature-image-container">
+                <img src="images/recipe.png" alt="Recipe Import feature" onerror="this.src='https://placehold.co/800x1600/E27B58/FFF?text=Smart\nImport'">
+            </div>
+        </div>
+
+        <div class="feature-row">
+            <div class="feature-text">
+                <h2>Meal planning and grocery shopping, simplified.</h2>
+                <p>Take the mental load off your week. Plan your meals on the calendar and let Koko generate categorized shopping lists automatically.</p>
+                <ul>
+                    <li><i class="fas fa-calendar-alt"></i> Visual weekly & monthly meal planner</li>
+                    <li><i class="fas fa-shopping-cart"></i> Smart, categorized shopping lists</li>
+                    <li><i class="fas fa-users"></i> Add meals for the whole family</li>
+                </ul>
+            </div>
+            <div class="feature-image-container">
+                <img src="images/shopping.png" alt="Shopping List Interface" onerror="this.src='https://placehold.co/800x1600/89A873/FFF?text=Shopping\nList'">
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-section" id="pricing">
+        <h2>Always Free. Forever Yours.</h2>
+        <p>Koko is a free app built to make cooking enjoyable again. Add unlimited recipes manually, use the meal planner, and access your collection offline. We simply ask you to pay for the magic (AI Scans & Cloud PDFs).</p>
+
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Koko Free</h3>
+                <div class="price">$0<span>/month</span></div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Unlimited manual recipes</li>
+                    <li><i class="fas fa-check"></i> Meal planner & Shopping lists</li>
+                    <li><i class="fas fa-check"></i> Basic Cooking Mode</li>
+                    <li><i class="fas fa-check"></i> 5 Free Smart Scans / month</li>
+                </ul>
+                <button class="btn" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Get Started</button>
+            </div>
+
+            <div class="pricing-card" style="background: var(--accent-color); border-color: var(--accent-light);">
+                <h3>Koko Premium</h3>
+                <div class="price">$29.99<span>/year</span></div>
+                <ul>
+                    <li><i class="fas fa-check"></i> Unlimited Smart AI Scans</li>
+                    <li><i class="fas fa-check"></i> Unlimited PDF Cookbook Imports</li>
+                    <li><i class="fas fa-check"></i> Social Media & Link Imports</li>
+                    <li><i class="fas fa-check"></i> Priority Support & Updates</li>
+                </ul>
+                <button class="btn" style="width: 100%; justify-content: center; background: var(--white); color: var(--accent-color);">Start Free Trial</button>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Pay as you go</h3>
+                <div class="price">$2.99<span>/pack</span></div>
+                <ul>
+                    <li><i class="fas fa-check"></i> 50 Smart AI Scans</li>
+                    <li><i class="fas fa-check"></i> No recurring subscription</li>
+                    <li><i class="fas fa-check"></i> Scans never expire</li>
+                    <li><i class="fas fa-check"></i> Support the developers</li>
+                </ul>
+                <button class="btn" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Buy Scans</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="about">
+        <div class="logo" style="margin-bottom: 24px;">Koko.</div>
+        <div class="footer-content">
+            <div class="footer-col">
+                <p>Bringing the joy back to home cooking and reducing the mental load of meal preparation. Koko is your warm, smart, beautifully designed kitchen companion.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#">Download</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a onclick="openModal('terms-modal')">Terms & Conditions</a>
+                <a onclick="openModal('privacy-modal')">Privacy Policy</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:hello@kokoapp.com">hello@kokoapp.com</a>
+                <div style="font-size: 20px; display: flex; gap: 16px; margin-top: 12px;">
+                    <i class="fab fa-instagram" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color='var(--text-color)'"></i>
+                    <i class="fab fa-tiktok" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color='var(--text-color)'"></i>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 Koko Recipes. All rights reserved.</div>
+            <div>Designed with ❤️ for home cooks.</div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="terms-modal">
+        <div class="modal-content">
+            <div class="close-btn" onclick="closeModal('terms-modal')"><i class="fas fa-times"></i></div>
+            <h2>Terms and Conditions</h2>
+            <p><strong>Last Updated: March 16, 2026</strong></p>
+            <p>Welcome to Koko Recipes. By accessing or using our application and website, you agree to be bound by these Terms and Conditions.</p>
+            <h3>1. Use of the Application</h3>
+            <p>Koko provides recipe management, parsing, and organization tools. You must not use the application for any illegal or unauthorized purpose.</p>
+            <h3>2. User Content</h3>
+            <p>You retain all rights to any PDF cookbooks, URLs, and recipes you upload to Koko. By uploading content, you grant us a license to parse and display it specifically for your personal use within the app.</p>
+            <h3>3. Subscriptions and Payments</h3>
+            <p>The core app is free. We offer premium subscriptions ("Koko Premium") and "Pay as you go" scan packs. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period.</p>
+            <h3>4. Limitation of Liability</h3>
+            <p>Koko is provided "as is". We do not guarantee that the AI parsing will be 100% accurate every time, and we are not responsible for any culinary disasters or burned dinners resulting from misread instructions!</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="privacy-modal">
+        <div class="modal-content">
+            <div class="close-btn" onclick="closeModal('privacy-modal')"><i class="fas fa-times"></i></div>
+            <h2>Privacy Policy</h2>
+            <p><strong>Last Updated: March 16, 2026</strong></p>
+            <p>At Koko Recipes, your privacy is extremely important to us. This policy outlines how we handle your data.</p>
+            <h3>1. Information We Collect</h3>
+            <p>When you use Koko, we collect account information (email, name) and the recipes, PDFs, and links you upload. We also collect usage data to improve our parsing algorithms.</p>
+            <h3>2. How We Use Your Information</h3>
+            <p>Your uploaded recipes are private to you unless you choose to share them. We use the data you provide to deliver our service, including processing PDFs and URLs through large language models to extract recipe data.</p>
+            <h3>3. Third-Party Services</h3>
+            <p>We use trusted third-party services (like Firebase, Gemini API, and RevenueCat) for authentication, AI processing, and payment processing. They have strict data privacy policies and are bound by confidentiality agreements.</p>
+            <h3>4. Data Deletion</h3>
+            <p>You can request account deletion at any time within the app's settings. Upon deletion, all your personal cookbooks and data will be permanently removed from our servers.</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Smooth reveal animation on scroll
+        const featureRows = document.querySelectorAll('.feature-row');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        featureRows.forEach(row => {
+            observer.observe(row);
+        });
+
+        // Modal Logic
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
