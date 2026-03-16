@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KOKO · Verify Email</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f5f3ee;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --brand: #7cb342;
+        --brand-dark: #5d8d2c;
+        --danger: #b91c1c;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(180deg, #f7f5ef 0%, #f2eee7 100%); color: var(--text); display: flex; align-items: center; justify-content: center; padding: 24px; }
+      .card { width: min(100%, 520px); background: var(--card); border-radius: 28px; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); overflow: hidden; border: 1px solid rgba(15, 23, 42, 0.05); }
+      .hero { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%); color: white; padding: 28px; }
+      .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.9; }
+      h1 { margin: 14px 0 8px; font-size: 30px; line-height: 1.15; }
+      .copy { padding: 28px; }
+      .status { padding: 16px; border-radius: 16px; margin: 18px 0; font-size: 14px; line-height: 1.6; }
+      .status.success { background: rgba(124, 179, 66, 0.12); color: #3f6212; }
+      .status.error { background: rgba(185, 28, 28, 0.08); color: var(--danger); }
+      .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+      .button { display: inline-flex; align-items: center; justify-content: center; padding: 14px 18px; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 14px; }
+      .button.primary { background: var(--brand); color: white; }
+      .button.secondary { background: #eef2e5; color: #3f6212; }
+      .footer { font-size: 12px; color: var(--muted); margin-top: 18px; }
+      code { display: block; background: #f6f8f3; border-radius: 14px; padding: 12px; margin-top: 14px; overflow-wrap: anywhere; color: #334155; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <section class="hero">
+        <div class="eyebrow">KOKO account security</div>
+        <h1 id="title">Verifying your email…</h1>
+        <p id="subtitle" style="margin:0;opacity:0.95;line-height:1.6;">Please wait while we confirm your email address.</p>
+      </section>
+      <section class="copy">
+        <div id="status" class="status success">Checking your secure verification link…</div>
+        <div class="actions" id="actions" hidden>
+          <a id="continue-link" class="button primary" href="https://koko.recipes">Open KOKO</a>
+          <a class="button secondary" href="https://koko.recipes">Go to website</a>
+        </div>
+        <p class="footer">If this link looks broken, ask the app to resend the verification email.</p>
+        <code id="debug" hidden></code>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+      import { applyActionCode, getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+      const params = new URLSearchParams(window.location.search);
+      const mode = params.get('mode');
+      const oobCode = params.get('oobCode');
+      const apiKey = params.get('apiKey');
+      const continueUrl = params.get('continueUrl') || 'https://koko.recipes';
+      const title = document.getElementById('title');
+      const subtitle = document.getElementById('subtitle');
+      const status = document.getElementById('status');
+      const actions = document.getElementById('actions');
+      const continueLink = document.getElementById('continue-link');
+      const debug = document.getElementById('debug');
+
+      continueLink.href = continueUrl;
+
+      function showError(message, details) {
+        title.textContent = 'This verification link is not valid';
+        subtitle.textContent = 'It may have expired, already been used, or been copied incorrectly.';
+        status.className = 'status error';
+        status.textContent = message;
+        actions.hidden = false;
+        if (details) {
+          debug.hidden = false;
+          debug.textContent = details;
+        }
+      }
+
+      function showSuccess() {
+        title.textContent = 'Your email is verified';
+        subtitle.textContent = 'Your KOKO account is now active.';
+        status.className = 'status success';
+        status.textContent = 'Verification complete. You can return to the app or continue on the website.';
+        actions.hidden = false;
+      }
+
+      if (mode !== 'verifyEmail' || !oobCode || !apiKey) {
+        showError('Missing verification parameters.', window.location.href);
+      } else {
+        const app = initializeApp({ apiKey });
+        const auth = getAuth(app);
+
+        applyActionCode(auth, oobCode)
+          .then(() => {
+            showSuccess();
+          })
+          .catch((error) => {
+            showError('Verification failed. Request a new email from the app.', error?.message || 'unknown-error');
+          });
+      }
+    </script>
+  </body>
+</html>
