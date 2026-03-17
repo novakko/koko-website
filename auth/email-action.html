@@ -3,18 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KOKO · Verify Email</title>
+    <title>KOKO · Account Action</title>
     <style>
-      :root {
-        color-scheme: light;
-        --bg: #f5f3ee;
+      .copy { padding: 28px; }
+      .copy p { margin: 0 0 14px; line-height: 1.65; color: var(--muted); }
         --card: #ffffff;
+      .status.info { background: rgba(14, 116, 144, 0.08); color: #155e75; }
         --text: #1f2937;
         --muted: #6b7280;
         --brand: #7cb342;
         --brand-dark: #5d8d2c;
         --danger: #b91c1c;
       }
+      .stack { display: grid; gap: 12px; }
+      .field-label { font-size: 13px; font-weight: 700; color: #334155; }
+      .input { width: 100%; border: 1px solid rgba(15, 23, 42, 0.12); border-radius: 14px; padding: 14px 16px; font: inherit; color: var(--text); background: #fff; }
+      .input:focus { outline: 2px solid rgba(124, 179, 66, 0.28); outline-offset: 1px; border-color: rgba(124, 179, 66, 0.48); }
+      .helper { font-size: 12px; color: var(--muted); }
       * { box-sizing: border-box; }
       body { margin: 0; min-height: 100vh; font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(180deg, #f7f5ef 0%, #f2eee7 100%); color: var(--text); display: flex; align-items: center; justify-content: center; padding: 24px; }
       .card { width: min(100%, 520px); background: var(--card); border-radius: 28px; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); overflow: hidden; border: 1px solid rgba(15, 23, 42, 0.05); }
@@ -37,23 +42,44 @@
     <main class="card">
       <section class="hero">
         <div class="eyebrow">KOKO account security</div>
-        <h1 id="title">Verifying your email…</h1>
-        <p id="subtitle" style="margin:0;opacity:0.95;line-height:1.6;">Please wait while we confirm your email address.</p>
+        <h1 id="title">Checking your secure link…</h1>
+        <p id="subtitle" style="margin:0;opacity:0.95;line-height:1.6;">Please wait while we prepare the next step for your account.</p>
       </section>
       <section class="copy">
-        <div id="status" class="status success">Checking your secure verification link…</div>
+        <div id="status" class="status info">Checking your secure account link…</div>
+        <div id="body-copy">
+          <p>This page handles email verification, password reset, and account recovery links from KOKO.</p>
+        </div>
+        <form id="reset-form" class="stack" hidden>
+          <div>
+            <label class="field-label" for="new-password">New password</label>
+            <input id="new-password" class="input" type="password" autocomplete="new-password" minlength="6" placeholder="Use at least 6 characters" />
+          </div>
+          <div>
+            <label class="field-label" for="confirm-password">Confirm password</label>
+            <input id="confirm-password" class="input" type="password" autocomplete="new-password" minlength="6" placeholder="Type the same password again" />
+          </div>
+          <button id="reset-submit" class="button primary" type="submit">Save new password</button>
+          <div id="reset-helper" class="helper"></div>
+        </form>
         <div class="actions" id="actions" hidden>
           <a id="continue-link" class="button primary" href="https://koko.recipes">Open KOKO</a>
           <a class="button secondary" href="https://koko.recipes">Go to website</a>
         </div>
-        <p class="footer">If this link looks broken, ask the app to resend the verification email.</p>
+        <p class="footer">If this link looks broken, ask the app to resend the email or contact support@koko.recipes.</p>
         <code id="debug" hidden></code>
       </section>
     </main>
 
     <script type="module">
       import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-      import { applyActionCode, getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+      import {
+        applyActionCode,
+        checkActionCode,
+        confirmPasswordReset,
+        getAuth,
+        verifyPasswordResetCode,
+      } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
       const params = new URLSearchParams(window.location.search);
       const mode = params.get('mode');
@@ -63,45 +89,191 @@
       const title = document.getElementById('title');
       const subtitle = document.getElementById('subtitle');
       const status = document.getElementById('status');
+      const bodyCopy = document.getElementById('body-copy');
       const actions = document.getElementById('actions');
       const continueLink = document.getElementById('continue-link');
       const debug = document.getElementById('debug');
+      const resetForm = document.getElementById('reset-form');
+      const resetSubmit = document.getElementById('reset-submit');
+      const resetHelper = document.getElementById('reset-helper');
+      const newPassword = document.getElementById('new-password');
+      const confirmPassword = document.getElementById('confirm-password');
 
       continueLink.href = continueUrl;
 
-      function showError(message, details) {
-        title.textContent = 'This verification link is not valid';
-        subtitle.textContent = 'It may have expired, already been used, or been copied incorrectly.';
-        status.className = 'status error';
+      function setStatus(type, message) {
+        status.className = `status ${type}`;
         status.textContent = message;
+      }
+
+      function setBodyCopy(lines) {
+        bodyCopy.innerHTML = '';
+        for (const line of lines) {
+          const paragraph = document.createElement('p');
+          paragraph.textContent = line;
+          bodyCopy.appendChild(paragraph);
+        }
+      }
+
+      function revealActions(primaryLabel = 'Open KOKO') {
+        continueLink.textContent = primaryLabel;
         actions.hidden = false;
+      }
+
+      function showError(message, details) {
+        title.textContent = 'This account link is not valid';
+        subtitle.textContent = 'It may have expired, already been used, or been copied incorrectly.';
+        setStatus('error', message);
+        setBodyCopy([
+          'Request a fresh email from the app and try again.',
+          'If the issue keeps happening, contact support@koko.recipes.',
+        ]);
+        resetForm.hidden = true;
+        revealActions('Open KOKO');
         if (details) {
           debug.hidden = false;
           debug.textContent = details;
         }
       }
 
-      function showSuccess() {
-        title.textContent = 'Your email is verified';
-        subtitle.textContent = 'Your KOKO account is now active.';
-        status.className = 'status success';
-        status.textContent = 'Verification complete. You can return to the app or continue on the website.';
-        actions.hidden = false;
+      function showSuccess({ heading, subtitleText, message, bodyLines = [], primaryLabel = 'Open KOKO' }) {
+        title.textContent = heading;
+        subtitle.textContent = subtitleText;
+        setStatus('success', message);
+        setBodyCopy(bodyLines);
+        resetForm.hidden = true;
+        revealActions(primaryLabel);
       }
 
-      if (mode !== 'verifyEmail' || !oobCode || !apiKey) {
+      function showResetPasswordForm(email) {
+        title.textContent = 'Choose a new password';
+        subtitle.textContent = `Reset password for ${email}.`;
+        setStatus('info', 'Create a new password to finish recovering your account.');
+        setBodyCopy([
+          'Use at least 6 characters.',
+          'After saving, you can sign back into the KOKO app with your new password.',
+        ]);
+        resetHelper.textContent = '';
+        resetForm.hidden = false;
+        revealActions('Return to KOKO');
+      }
+
+      function firebaseErrorMessage(error, fallback) {
+        const code = error?.code || '';
+        switch (code) {
+          case 'auth/expired-action-code':
+            return 'This link has expired. Request a fresh email and try again.';
+          case 'auth/invalid-action-code':
+            return 'This link is no longer valid. Request a fresh email and try again.';
+          case 'auth/weak-password':
+            return 'Use a stronger password with at least 6 characters.';
+          default:
+            return fallback;
+        }
+      }
+
+      if (!mode || !oobCode || !apiKey) {
         showError('Missing verification parameters.', window.location.href);
       } else {
         const app = initializeApp({ apiKey });
         const auth = getAuth(app);
 
-        applyActionCode(auth, oobCode)
-          .then(() => {
-            showSuccess();
-          })
-          .catch((error) => {
-            showError('Verification failed. Request a new email from the app.', error?.message || 'unknown-error');
-          });
+        const handleAction = async () => {
+          switch (mode) {
+            case 'verifyEmail':
+              await applyActionCode(auth, oobCode);
+              showSuccess({
+                heading: 'Your email is verified',
+                subtitleText: 'Your KOKO account is now active.',
+                message: 'Verification complete. You can return to the app or continue on the website.',
+                bodyLines: [
+                  'You can now sign back into the app and continue using your account.',
+                ],
+              });
+              break;
+            case 'verifyAndChangeEmail':
+              await applyActionCode(auth, oobCode);
+              showSuccess({
+                heading: 'Your email address was updated',
+                subtitleText: 'The new email is now confirmed for your KOKO account.',
+                message: 'Email change complete. You can continue with your updated address.',
+                bodyLines: ['Sign back into the app if you were previously signed out.'],
+              });
+              break;
+            case 'recoverEmail': {
+              const info = await checkActionCode(auth, oobCode);
+              await applyActionCode(auth, oobCode);
+              const restoredEmail = info?.data?.email;
+              showSuccess({
+                heading: 'Your email was restored',
+                subtitleText: restoredEmail
+                  ? `${restoredEmail} is active again for your KOKO account.`
+                  : 'Your previous email is active again for your KOKO account.',
+                message: 'Account recovery complete. If this was not you, reset your password immediately.',
+                bodyLines: [
+                  'For extra security, we recommend changing your password next.',
+                ],
+                primaryLabel: 'Open KOKO',
+              });
+              break;
+            }
+            case 'resetPassword': {
+              const email = await verifyPasswordResetCode(auth, oobCode);
+              showResetPasswordForm(email);
+              break;
+            }
+            default:
+              showError(`Unsupported Firebase action mode: ${mode}.`, window.location.href);
+          }
+        };
+
+        handleAction().catch((error) => {
+          showError(
+            firebaseErrorMessage(error, 'This account action failed. Request a fresh email from the app.'),
+            error?.message || 'unknown-error',
+          );
+        });
+
+        resetForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const nextPassword = newPassword.value;
+          const repeatedPassword = confirmPassword.value;
+
+          if (nextPassword.length < 6) {
+            setStatus('error', 'Use a password with at least 6 characters.');
+            resetHelper.textContent = 'Short passwords are rejected by Firebase.';
+            return;
+          }
+
+          if (nextPassword !== repeatedPassword) {
+            setStatus('error', 'The passwords do not match yet.');
+            resetHelper.textContent = 'Check both fields and try again.';
+            return;
+          }
+
+          resetSubmit.disabled = true;
+          resetHelper.textContent = 'Saving your new password…';
+          setStatus('info', 'Saving your new password…');
+
+          try {
+            await confirmPasswordReset(auth, oobCode, nextPassword);
+            showSuccess({
+              heading: 'Your password has been reset',
+              subtitleText: 'You can now sign in with your new password.',
+              message: 'Password reset complete. Return to the KOKO app and sign in again.',
+              bodyLines: [
+                'For security, the old password will no longer work.',
+              ],
+              primaryLabel: 'Open KOKO',
+            });
+          } catch (error) {
+            resetSubmit.disabled = false;
+            setStatus('error', firebaseErrorMessage(error, 'Password reset failed. Request a fresh reset email and try again.'));
+            resetHelper.textContent = 'If this link expired, request a new reset email.';
+            debug.hidden = false;
+            debug.textContent = error?.message || 'unknown-error';
+          }
+        });
       }
     </script>
   </body>
