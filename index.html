@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koko | The Everything Recipe App</title>
+    <title>KOKO | The Smart Recipe Capture App</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            /* Warm, inviting color palette */
-            --bg-color: #FBF8F1; /* Soft cream/off-white */
-            --text-color: #2C3626; /* Deep organic green/brown */
-            --accent-color: #E27B58; /* Terracotta / Warm sunset orange */
-            --accent-light: #F4E2D8;
-            --highlight-green: #89A873; 
+            /* KOKO Brand Colors */
+            --bg-sage: #D1D9C6;
+            --bg-cream: #FDFCF8;
+            --bg-tan: #E5DDC8;
+            --text-dark: #43392F;
+            --text-body: #4F4F4F;
+            --primary: #76835B;
+            --primary-hover: #5A6546;
             --white: #FFFFFF;
             
-            --border-radius-lg: 32px;
+            --border-radius-xl: 45px;
+            --border-radius-lg: 30px;
             --border-radius-md: 20px;
             
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'Inter', sans-serif;
         }
 
         * {
@@ -35,16 +40,18 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: var(--font-body);
+            background-color: var(--bg-cream);
+            color: var(--text-body);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
         h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            color: var(--text-dark);
             line-height: 1.1;
-            font-weight: 600;
+            font-weight: 400;
         }
 
         a {
@@ -52,32 +59,32 @@
             color: inherit;
         }
 
-        /* Nav */
+        /* Glassmorphism Nav */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 5%;
+            padding: 20px 5%;
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(251, 248, 241, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(253, 252, 248, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0,0,0,0.02);
             transition: var(--transition);
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent-color);
-            letter-spacing: -1px;
+            font-family: var(--font-display);
+            font-size: 32px;
+            color: var(--text-dark);
         }
 
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 36px;
             align-items: center;
         }
 
@@ -88,14 +95,14 @@
         }
 
         .nav-links a:hover {
-            color: var(--accent-color);
+            color: var(--primary);
         }
 
         .btn {
-            background-color: var(--accent-color);
+            background-color: var(--primary);
             color: var(--white);
-            padding: 12px 24px;
-            border-radius: 100px;
+            padding: 14px 28px;
+            border-radius: 100px; /* Pill shaped */
             font-weight: 600;
             font-size: 15px;
             cursor: pointer;
@@ -108,128 +115,151 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(226, 123, 88, 0.2);
-            background-color: #d16a48;
+            box-shadow: 0 10px 20px rgba(118, 131, 91, 0.3);
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Waves */
+        .wave-container {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: var(--bg-cream);
+        }
+        .wave-container svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 120px;
+        }
+        .wave-container .shape-fill {
+            fill: var(--bg-sage);
+        }
+        .wave-bottom .shape-fill {
+            fill: var(--bg-sage);
+        }
+        .wave-cream .shape-fill {
+            fill: var(--bg-cream);
         }
 
         /* Hero Section */
         .hero {
-            padding: 160px 5% 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-color: var(--bg-sage);
+            padding: 180px 5% 0;
             text-align: center;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto 60px;
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-size: clamp(3.5rem, 6vw, 5.5rem);
             margin-bottom: 24px;
-            letter-spacing: -2px;
-            max-width: 900px;
-            color: var(--text-color);
-        }
-
-        .hero h1 span {
-            color: var(--accent-color);
+            letter-spacing: -1px;
         }
 
         .hero p {
-            font-size: clamp(1.1rem, 2vw, 1.4rem);
-            max-width: 700px;
-            margin-bottom: 48px;
-            opacity: 0.8;
-            font-weight: 300;
-        }
-
-        .badges {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 64px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .app-badge {
-            background: var(--text-color);
-            color: var(--white);
-            padding: 12px 32px;
-            border-radius: 100px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .app-badge i {
-            font-size: 24px;
-        }
-
-        .app-badge:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(44, 54, 38, 0.2);
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            max-width: 650px;
+            margin: 0 auto 40px;
+            opacity: 0.85;
+            color: var(--text-dark);
         }
 
         .hero-images {
             display: flex;
             justify-content: center;
-            gap: 24px;
-            margin-top: 40px;
-            width: 100%;
-            perspective: 1000px;
+            gap: -40px;
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+            height: 500px;
+            perspective: 1200px;
         }
 
         .screenshot {
             width: 250px;
-            border-radius: 40px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-            transform-style: preserve-3d;
-            transition: var(--transition);
-            /* Add a subtle border to make it pop like a device */
+            border-radius: 35px;
+            box-shadow: 0 30px 60px rgba(67, 57, 47, 0.2);
             border: 8px solid var(--white);
             background: var(--white);
             overflow: hidden;
-            display: flex;
+            transition: var(--transition);
+            position: absolute;
             object-fit: cover;
         }
-        
+
         .screenshot img {
              width: 100%;
              height: auto;
-             border-radius: 32px;
              display: block;
         }
 
-        .screenshot:nth-child(1) {
-            transform: rotateY(15deg) rotateX(5deg) translateY(20px);
+        .screenshot.left {
+            transform: rotateY(15deg) rotateX(5deg) translateX(-180px) translateY(40px);
+            z-index: 1;
         }
-        .screenshot:nth-child(2) {
-            transform: translateZ(50px) translateY(-10px);
-            z-index: 2;
+        .screenshot.center {
+            transform: translateZ(50px) translateY(-20px);
+            z-index: 3;
             width: 280px;
         }
-        .screenshot:nth-child(3) {
-            transform: rotateY(-15deg) rotateX(5deg) translateY(20px);
+        .screenshot.right {
+            transform: rotateY(-15deg) rotateX(5deg) translateX(180px) translateY(40px);
+            z-index: 2;
         }
 
         .hero-images:hover .screenshot {
-            transform: translateZ(0) rotateY(0) rotateX(0) translateY(0);
+            transform: translateZ(0) rotateY(0) rotateX(0) translateX(0) translateY(0);
+            position: relative;
+            margin: 0 15px;
         }
 
-        /* Feature Sections */
-        .features {
+        /* Generic Section Styling */
+        .section {
             padding: 100px 5%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        /* Feature Row Layout */
         .feature-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 64px;
+            gap: 60px;
             align-items: center;
             margin-bottom: 120px;
             opacity: 0;
@@ -251,86 +281,124 @@
             direction: ltr;
         }
 
-        .feature-text h2 {
-            font-size: 3rem;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
+        .feature-text h3 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
         }
 
         .feature-text p {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             opacity: 0.8;
-            margin-bottom: 24px;
-            font-weight: 300;
+            margin-bottom: 30px;
         }
 
-        .feature-text ul {
+        .feature-bullets {
             list-style: none;
-            margin-top: 32px;
         }
 
-        .feature-text ul li {
+        .feature-bullets li {
             margin-bottom: 16px;
             font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
-        .feature-text ul li i {
-            color: var(--accent-color);
-            background: var(--accent-light);
-            padding: 8px;
+        .feature-bullets li i {
+            color: var(--primary);
+            background: var(--bg-tan);
+            padding: 10px;
             border-radius: 50%;
             font-size: 14px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .feature-image-container {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            padding: 40px;
+            background: var(--bg-tan);
+            border-radius: var(--border-radius-xl);
+            padding: 50px;
             display: flex;
             justify-content: center;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
-            /* Soft gradient background */
-            background: linear-gradient(135deg, #FFF, #F9EBE5);
+            transition: var(--transition);
         }
 
-        .feature-image-container img {
-            width: 260px;
-            border-radius: 36px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        .feature-image-container:hover {
+            transform: scale(1.02);
+            background: #DED4BD;
+        }
+
+        .feature-image {
+            width: 250px;
+            border-radius: 35px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             border: 6px solid var(--white);
             transition: var(--transition);
         }
 
-        .feature-image-container:hover img {
-            transform: translateY(-10px) scale(1.02);
+        /* Multi Card Layout for Imports */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(67, 57, 47, 0.05);
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(67, 57, 47, 0.08);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            background: var(--bg-cream);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card h4 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            opacity: 0.8;
         }
 
         /* Pricing Focus Section */
         .pricing-section {
-            background: var(--text-color);
+            background: var(--text-dark);
             color: var(--white);
             padding: 100px 5%;
             text-align: center;
-            border-radius: 40px;
-            margin: 0 24px 100px;
+            position: relative;
         }
 
         .pricing-section h2 {
+            color: var(--bg-cream);
             font-size: 3.5rem;
             margin-bottom: 20px;
-            color: var(--highlight-green);
-        }
-
-        .pricing-section p {
-            font-size: 1.3rem;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            opacity: 0.9;
-            font-weight: 300;
         }
 
         .pricing-cards {
@@ -338,60 +406,71 @@
             justify-content: center;
             gap: 32px;
             flex-wrap: wrap;
-            margin-top: 50px;
+            margin-top: 60px;
+            max-width: 1000px;
+            margin-inline: auto;
         }
 
         .pricing-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: var(--border-radius-lg);
-            width: 320px;
+            background: rgba(253, 252, 248, 0.05);
+            border: 1px solid rgba(253, 252, 248, 0.1);
+            padding: 50px 40px;
+            border-radius: var(--border-radius-xl);
+            width: 380px;
             text-align: left;
             backdrop-filter: blur(10px);
             transition: var(--transition);
         }
 
+        .pricing-card.pro {
+            background: var(--primary);
+            border-color: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
         .pricing-card:hover {
             transform: translateY(-10px);
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.2);
+        }
+        .pricing-card.pro:hover {
+            transform: scale(1.05) translateY(-10px);
         }
 
         .pricing-card h3 {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 12px;
+            color: var(--white);
         }
 
         .pricing-card .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: var(--accent-light);
+            font-size: 3rem;
+            font-weight: 600;
+            font-family: var(--font-display);
+            margin-bottom: 30px;
+            color: var(--bg-tan);
         }
 
         .pricing-card ul {
             list-style: none;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
         .pricing-card ul li {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 12px;
-            opacity: 0.8;
-            font-size: 0.95rem;
+            opacity: 0.85;
+            font-size: 1.05rem;
         }
 
         .pricing-card ul li i {
-            color: var(--highlight-green);
+            color: var(--bg-sage);
         }
 
         /* Footer */
         footer {
-            padding: 60px 5% 40px;
-            border-top: 1px solid rgba(0,0,0,0.05);
+            background: var(--bg-cream);
+            padding: 80px 5% 40px;
             display: flex;
             flex-direction: column;
             gap: 40px;
@@ -403,7 +482,7 @@
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 40px;
+            gap: 50px;
         }
 
         .footer-col {
@@ -412,37 +491,36 @@
         }
 
         .footer-col h4 {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 24px;
         }
 
         .footer-col p {
-            opacity: 0.7;
-            font-size: 0.9rem;
+            opacity: 0.8;
+            font-size: 1rem;
             max-width: 300px;
         }
 
         .footer-col a {
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             opacity: 0.8;
             transition: var(--transition);
-            font-size: 0.95rem;
-            cursor: pointer;
+            font-size: 1rem;
         }
 
         .footer-col a:hover {
             opacity: 1;
-            color: var(--accent-color);
+            color: var(--primary);
         }
 
         .footer-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 24px;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            font-size: 0.85rem;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
             opacity: 0.6;
         }
 
@@ -453,8 +531,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(251, 248, 241, 0.95);
-            backdrop-filter: blur(5px);
+            background: rgba(67, 57, 47, 0.4);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             display: flex;
             justify-content: center;
@@ -470,13 +548,13 @@
         }
 
         .modal-content {
-            background: var(--white);
+            background: var(--bg-cream);
             width: 90%;
             max-width: 800px;
             height: 80vh;
-            border-radius: var(--border-radius-md);
-            padding: 40px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.15);
             position: relative;
             transform: translateY(50px);
             transition: var(--transition);
@@ -489,192 +567,211 @@
 
         .close-btn {
             position: absolute;
-            top: 24px;
-            right: 24px;
+            top: 30px;
+            right: 30px;
             font-size: 24px;
             cursor: pointer;
-            color: var(--text-color);
-            background: var(--bg-color);
-            width: 40px;
-            height: 40px;
+            color: var(--text-dark);
+            background: var(--white);
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: var(--transition);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .close-btn:hover {
-            background: var(--accent-light);
-            color: var(--accent-color);
+            background: var(--bg-tan);
         }
 
         .modal-content h2 {
-            font-size: 2rem;
-            margin-bottom: 24px;
-            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--primary);
         }
 
         .modal-content p, .modal-content li {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             opacity: 0.8;
             line-height: 1.8;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero-images { flex-direction: column; align-items: center; perspective: none; }
-            .screenshot { transform: none; width: 220px; z-index: 1;}
-            .screenshot:nth-child(n) { transform: none;}
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 3.5rem; }
+            .hero-images { height: auto; perspective: none; flex-direction: column; align-items: center; margin-top: 40px; }
+            .screenshot { position: relative; transform: none !important; width: 240px !important; margin: 10px 0 !important; }
+            .screenshot.left, .screenshot.right { display: none; } /* Show only center on mobile */
             
             .feature-row { grid-template-columns: 1fr; gap: 40px; text-align: center; }
             .feature-row.reverse { direction: ltr; }
-            .feature-text ul li { justify-content: center; text-align: left; }
-            .feature-image-container img { width: 220px; }
-            
-            .pricing-section { padding: 60px 5%; margin: 0 16px 60px; border-radius: 24px; }
+            .feature-bullets li { justify-content: center; text-align: left; }
+            .pricing-card.pro { transform: none; }
+            .pricing-card.pro:hover { transform: translateY(-10px); }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
             .pricing-section h2 { font-size: 2.5rem; }
+            .footer-content { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">Koko.</div>
+        <div class="logo">KOKO.</div>
         <div class="nav-links">
             <a href="#features">Features</a>
+            <a href="#process">How it Works</a>
             <a href="#pricing">Pricing</a>
-            <a href="#about">About</a>
         </div>
-        <button class="btn">Get the App</button>
+        <a href="#pricing" class="btn">Get Started</a>
     </nav>
 
     <section class="hero">
-        <h1>Bring all your recipes <span>together.</span></h1>
-        <p>Your beautiful, centralized cookbook. Import PDF cookbooks, save links from social media, and discover a joy-filled, interactive cooking experience.</p>
-        
-        <div class="badges">
-            <a class="app-badge">
-                <i class="fab fa-apple"></i>
-                <div>
-                    <div style="font-size: 10px; opacity: 0.8">Download on the</div>
-                    <div style="font-weight: 600;">App Store</div>
-                </div>
-            </a>
-            <a class="app-badge">
-                <i class="fab fa-google-play"></i>
-                <div>
-                    <div style="font-size: 10px; opacity: 0.8">GET IT ON</div>
-                    <div style="font-weight: 600;">Google Play</div>
-                </div>
-            </a>
+        <div class="hero-content">
+            <h1>Bring all your recipes together.</h1>
+            <p>Import recipes from social media, websites, PDFs, and photos — then organize, plan, shop, and cook step by step from your own beautifully designed personal library.</p>
+            <a href="#pricing" class="btn">Try KOKO Free</a>
         </div>
-
+        
         <div class="hero-images">
-            <!-- Utilizing printscreens placeholders based on standard app resolutions -->
-            <div class="screenshot"><img src="images/home.png" alt="Koko Home Screen" onerror="this.src='https://placehold.co/800x1600/F4E2D8/E27B58?text=Home\nRecipes'"></div>
-            <div class="screenshot"><img src="images/recipe.png" alt="Koko Recipe Screen" onerror="this.src='https://placehold.co/800x1600/E27B58/FFF?text=Soup\nRecipe'"></div>
-            <div class="screenshot"><img src="images/mealplan.png" alt="Koko Meal Plan Screen" onerror="this.src='https://placehold.co/800x1600/89A873/FFF?text=Meal\nPlan'"></div>
+            <div class="screenshot left"><img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.33.27.png" alt="Library"></div>
+            <div class="screenshot center"><img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.33.15.png" alt="Home"></div>
+            <div class="screenshot right"><img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.33.42.png" alt="Detail"></div>
         </div>
     </section>
 
-    <section class="features" id="features">
+    <!-- Top Wave -->
+    <div class="wave-container wave-cream">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0.5C72.6,31.7,149.95,57.14,221.7,59.39C255.45,60.44,289.47,59.88,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
+
+    <section class="section" id="features">
+        <div class="section-header">
+            <h2>Save recipes from anywhere.</h2>
+            <p>Stop losing great recipes in saved folders or messy screenshot albums. KOKO is your pipeline for turning content into usable, cookable instructions.</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fab fa-tiktok"></i></div>
+                <h4>Creator Videos</h4>
+                <p>Paste links from TikTok, Instagram, or YouTube. KOKO recovers ingredients and instructions from video captions effortlessly.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                <h4>PDF Cookbooks</h4>
+                <p>Import an entire PDF cookbook and let KOKO turn it into a dedicated digital collection. Review extracted recipes before saving.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-camera"></i></div>
+                <h4>Smart Photos</h4>
+                <p>Snap a photo of a handwritten card or meal kit. Turn messy recipe photos directly into editable cooking steps.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="process">
+        
         <div class="feature-row">
             <div class="feature-text">
-                <h2>Finally, all your PDF cookbooks in one place.</h2>
-                <p>No more searching through disorganized folders. Koko allows you to import any PDF cookbook, parse recipes beautifully, and store them securely.</p>
-                <ul>
-                    <li><i class="fas fa-check"></i> Automatically extracts ingredients & instructions</li>
-                    <li><i class="fas fa-check"></i> Keeps the original layout accessible</li>
-                    <li><i class="fas fa-check"></i> Organized by collections and tags</li>
+                <h3>Clean up before saving.</h3>
+                <p>KOKO is smart but editable. You aren't locked into blind AI imports. Review your entries to ensure your collection is exactly how you want it.</p>
+                <ul class="feature-bullets">
+                    <li><i class="fas fa-edit"></i> Edit titles, ingredients, and instructions</li>
+                    <li><i class="fas fa-image"></i> Choose a stunning hero image</li>
+                    <li><i class="fas fa-tasks"></i> Select only the best recipes from PDF batches</li>
                 </ul>
             </div>
             <div class="feature-image-container">
-                <img src="images/home.png" alt="Cookbook Integration UI" onerror="this.src='https://placehold.co/800x1600/F4E2D8/E27B58?text=Your\nRecipes'">
+                <img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.34.09.png" alt="Review Recipe" class="feature-image">
             </div>
         </div>
 
         <div class="feature-row reverse">
             <div class="feature-text">
-                <h2>Save from anywhere. Literally.</h2>
-                <p>Found a recipe on Instagram, TikTok, or a blog? Drop a link, a screenshot, or plain text. Koko's smart engine turns it into a structured, cookable recipe instantly.</p>
-                <ul>
-                    <li><i class="fas fa-link"></i> Paste URLs from social media</li>
-                    <li><i class="fas fa-camera"></i> Scan physical cookbook pages</li>
-                    <li><i class="fas fa-robot"></i> AI-powered nutrition extraction</li>
+                <h3>Build your personal library.</h3>
+                <p>Turn KOKO into your centralized, beautifully designed culinary hub. Organize your weeknight dinners, holiday baking, and meal prep separately.</p>
+                <ul class="feature-bullets">
+                    <li><i class="fas fa-book"></i> Organize recipes into themed cookbooks</li>
+                    <li><i class="fas fa-heart"></i> Favorite recipes to find them instantly</li>
+                    <li><i class="fas fa-search"></i> Search by ingredient, name, or dietary tag</li>
                 </ul>
             </div>
             <div class="feature-image-container">
-                <img src="images/recipe.png" alt="Recipe Import feature" onerror="this.src='https://placehold.co/800x1600/E27B58/FFF?text=Smart\nImport'">
+                <img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.34.32.png" alt="Recipe Library" class="feature-image">
             </div>
         </div>
 
         <div class="feature-row">
             <div class="feature-text">
-                <h2>Meal planning and grocery shopping, simplified.</h2>
-                <p>Take the mental load off your week. Plan your meals on the calendar and let Koko generate categorized shopping lists automatically.</p>
-                <ul>
-                    <li><i class="fas fa-calendar-alt"></i> Visual weekly & monthly meal planner</li>
-                    <li><i class="fas fa-shopping-cart"></i> Smart, categorized shopping lists</li>
-                    <li><i class="fas fa-users"></i> Add meals for the whole family</li>
+                <h3>Plan, shop, and cook.</h3>
+                <p>Go from idea to table seamlessly. Turn saved recipes into a real meal plan, auto-generate your grocery list, and use guided mode when cooking.</p>
+                <ul class="feature-bullets">
+                    <li><i class="fas fa-calendar-alt"></i> Visual meal planning calendar</li>
+                    <li><i class="fas fa-shopping-basket"></i> Smart, department-categorized shopping lists</li>
+                    <li><i class="fas fa-stopwatch"></i> Step-by-step cooking mode with built-in timers</li>
                 </ul>
             </div>
             <div class="feature-image-container">
-                <img src="images/shopping.png" alt="Shopping List Interface" onerror="this.src='https://placehold.co/800x1600/89A873/FFF?text=Shopping\nList'">
+                <img src="assets/Simulator Screenshot - iPhone 16 Pro Max - 2026-04-13 at 16.34.53.png" alt="Shopping and Meal Plan" class="feature-image">
             </div>
         </div>
+
     </section>
+
+    <!-- Bottom Wave into Pricing -->
+    <div class="wave-container wave-bottom">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" style="transform: rotate(180deg); margin-bottom: -5px;">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0.5C72.6,31.7,149.95,57.14,221.7,59.39C255.45,60.44,289.47,59.88,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
 
     <section class="pricing-section" id="pricing">
-        <h2>Always Free. Forever Yours.</h2>
-        <p>Koko is a free app built to make cooking enjoyable again. Add unlimited recipes manually, use the meal planner, and access your collection offline. We simply ask you to pay for the magic (AI Scans & Cloud PDFs).</p>
-
+        <h2>Start free. Upgrade for magic.</h2>
+        
         <div class="pricing-cards">
             <div class="pricing-card">
-                <h3>Koko Free</h3>
-                <div class="price">$0<span>/month</span></div>
+                <h3>KOKO Free</h3>
+                <div class="price">$0<span>/forever</span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> Unlimited manual recipes</li>
+                    <li><i class="fas fa-check"></i> Simple link imports included</li>
+                    <li><i class="fas fa-check"></i> Unlimited manual recipe entry</li>
                     <li><i class="fas fa-check"></i> Meal planner & Shopping lists</li>
-                    <li><i class="fas fa-check"></i> Basic Cooking Mode</li>
-                    <li><i class="fas fa-check"></i> 5 Free Smart Scans / month</li>
+                    <li><i class="fas fa-check"></i> Step-by-step Cooking Mode</li>
+                    <li><i class="fas fa-check"></i> 5 Free Smart Scans on signup</li>
                 </ul>
-                <button class="btn" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Get Started</button>
+                <button class="btn btn-outline" style="width: 100%; justify-content: center; color: var(--bg-cream); border-color: var(--bg-cream);">Download App</button>
             </div>
 
-            <div class="pricing-card" style="background: var(--accent-color); border-color: var(--accent-light);">
-                <h3>Koko Premium</h3>
-                <div class="price">$29.99<span>/year</span></div>
+            <div class="pricing-card pro">
+                <h3>KOKO Pro</h3>
+                <div class="price">Pro<span></span></div>
                 <ul>
-                    <li><i class="fas fa-check"></i> Unlimited Smart AI Scans</li>
-                    <li><i class="fas fa-check"></i> Unlimited PDF Cookbook Imports</li>
-                    <li><i class="fas fa-check"></i> Social Media & Link Imports</li>
-                    <li><i class="fas fa-check"></i> Priority Support & Updates</li>
+                    <li><i class="fas fa-check"></i> Unlimited Smart Scans</li>
+                    <li><i class="fas fa-check"></i> Advanced AI parsing for trickier imports</li>
+                    <li><i class="fas fa-check"></i> AI Nutrition Estimates & Translation</li>
+                    <li><i class="fas fa-check"></i> Full PDF Cookbook processing</li>
+                    <li><i class="fas fa-check"></i> Monthly and Annual plans available</li>
                 </ul>
-                <button class="btn" style="width: 100%; justify-content: center; background: var(--white); color: var(--accent-color);">Start Free Trial</button>
-            </div>
-            
-            <div class="pricing-card">
-                <h3>Pay as you go</h3>
-                <div class="price">$2.99<span>/pack</span></div>
-                <ul>
-                    <li><i class="fas fa-check"></i> 50 Smart AI Scans</li>
-                    <li><i class="fas fa-check"></i> No recurring subscription</li>
-                    <li><i class="fas fa-check"></i> Scans never expire</li>
-                    <li><i class="fas fa-check"></i> Support the developers</li>
-                </ul>
-                <button class="btn" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Buy Scans</button>
+                <button class="btn" style="width: 100%; justify-content: center; background: var(--bg-cream); color: var(--text-dark);">Explore Pro</button>
             </div>
         </div>
     </section>
 
-    <footer id="about">
-        <div class="logo" style="margin-bottom: 24px;">Koko.</div>
+    <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <p>Bringing the joy back to home cooking and reducing the mental load of meal preparation. Koko is your warm, smart, beautifully designed kitchen companion.</p>
+                <div class="logo" style="margin-bottom: 20px;">KOKO.</div>
+                <p>The smart recipe capture and organization app. Bring messy recipes in, clean them up, and use them beautifully in the kitchen.</p>
             </div>
             <div class="footer-col">
                 <h4>Product</h4>
@@ -684,21 +781,22 @@
             </div>
             <div class="footer-col">
                 <h4>Legal</h4>
-                <a href="/terms/">Terms & Conditions</a>
-                <a href="/privacy/">Privacy Policy</a>
+                <a href="#" onclick="openModal('terms-modal')">Terms & Conditions</a>
+                <a href="#" onclick="openModal('privacy-modal')">Privacy Policy</a>
             </div>
             <div class="footer-col">
-                <h4>Contact</h4>
+                <h4>Connect</h4>
                 <a href="mailto:support@koko.recipes">support@koko.recipes</a>
-                <div style="font-size: 20px; display: flex; gap: 16px; margin-top: 12px;">
-                    <i class="fab fa-instagram" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color='var(--text-color)'"></i>
-                    <i class="fab fa-tiktok" style="cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--accent-color)'" onmouseout="this.style.color='var(--text-color)'"></i>
+                <div style="font-size: 24px; display: flex; gap: 16px; margin-top: 16px;">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <div>&copy; 2026 Koko Recipes. All rights reserved.</div>
-            <div>Designed with ❤️ for home cooks.</div>
+            <div>&copy; 2026 KOKO App. All rights reserved.</div>
+            <div>Built for personal recipe pipelines.</div>
         </div>
     </footer>
 
@@ -707,16 +805,11 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('terms-modal')"><i class="fas fa-times"></i></div>
             <h2>Terms and Conditions</h2>
-            <p><strong>Last Updated: March 16, 2026</strong></p>
-            <p>Welcome to Koko Recipes. By accessing or using our application and website, you agree to be bound by these Terms and Conditions.</p>
-            <h3>1. Use of the Application</h3>
-            <p>Koko provides recipe management, parsing, and organization tools. You must not use the application for any illegal or unauthorized purpose.</p>
-            <h3>2. User Content</h3>
-            <p>You retain all rights to any PDF cookbooks, URLs, and recipes you upload to Koko. By uploading content, you grant us a license to parse and display it specifically for your personal use within the app.</p>
-            <h3>3. Subscriptions and Payments</h3>
-            <p>The core app is free. We offer premium subscriptions ("Koko Premium") and "Pay as you go" scan packs. Subscriptions automatically renew unless canceled at least 24 hours before the end of the current period.</p>
-            <h3>4. Limitation of Liability</h3>
-            <p>Koko is provided "as is". We do not guarantee that the AI parsing will be 100% accurate every time, and we are not responsible for any culinary disasters or burned dinners resulting from misread instructions!</p>
+            <p><strong>Last Updated: April 13, 2026</strong></p>
+            <p>Welcome to KOKO. By accessing or using our application and website, you agree to be bound by these Terms and Conditions.</p>
+            <p>1. <strong>Use of the Application:</strong> KOKO provides recipe management, parsing, and organization tools for personal use. </p>
+            <p>2. <strong>User Content:</strong> You retain all rights to any PDFs, URLs, and recipes you upload to KOKO. By uploading, you grant us a license to process it specifically for your personal use within the app.</p>
+            <p>3. <strong>Subscriptions:</strong> While simple link imports are free, KOKO Pro unlocks intelligent parsing capabilities securely. Specifics of billing are managed through corresponding App Stores.</p>
         </div>
     </div>
 
@@ -724,40 +817,45 @@
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('privacy-modal')"><i class="fas fa-times"></i></div>
             <h2>Privacy Policy</h2>
-            <p><strong>Last Updated: March 16, 2026</strong></p>
-            <p>At Koko Recipes, your privacy is extremely important to us. This policy outlines how we handle your data.</p>
-            <h3>1. Information We Collect</h3>
-            <p>When you use Koko, we collect account information (email, name) and the recipes, PDFs, and links you upload. We also collect usage data to improve our parsing algorithms.</p>
-            <h3>2. How We Use Your Information</h3>
-            <p>Your uploaded recipes are private to you unless you choose to share them. We use the data you provide to deliver our service, including processing PDFs and URLs through large language models to extract recipe data.</p>
-            <h3>3. Third-Party Services</h3>
-            <p>We use trusted third-party services (like Firebase, Gemini API, and RevenueCat) for authentication, AI processing, and payment processing. They have strict data privacy policies and are bound by confidentiality agreements.</p>
-            <h3>4. Data Deletion</h3>
-            <p>You can request account deletion at any time within the app's settings. Upon deletion, all your personal cookbooks and data will be permanently removed from our servers.</p>
+            <p><strong>Last Updated: April 13, 2026</strong></p>
+            <p>At KOKO, your privacy is paramount. KOKO is fundamentally designed around saved local content rather than always-online browsing.</p>
+            <p>1. <strong>Local First:</strong> The app stores recipes, cookbooks, shopping lists, and meal plans locally using on-device persistence wherever possible.</p>
+            <p>2. <strong>Accounts:</strong> You may use KOKO in guest mode or securely sign in (e.g. Sign in with Apple) to sync your recipe library.</p>
+            <p>3. <strong>Data Deletion:</strong> You can request account deletion at any time within the app's settings. Upon deletion, all your synced cookbooks and personal data will be completely removed.</p>
         </div>
     </div>
 
     <!-- Scripts -->
     <script>
         // Smooth reveal animation on scroll
-        const featureRows = document.querySelectorAll('.feature-row');
+        const featureRows = document.querySelectorAll('.feature-row, .card');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    if(entry.target.classList.contains('card')) {
+                         entry.target.style.opacity = '1';
+                         entry.target.style.transform = 'translateY(0)';
+                    }
                 }
             });
         }, { threshold: 0.1 });
 
         featureRows.forEach(row => {
             observer.observe(row);
+            if(row.classList.contains('card')) {
+                 row.style.opacity = '0';
+                 row.style.transform = 'translateY(20px)';
+                 row.style.transition = 'all 0.6s ease-out';
+            }
         });
 
         // Modal Logic
         function openModal(id) {
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden';
+            return false;
         }
 
         function closeModal(id) {
